@@ -76,7 +76,7 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     // Adds KFF as dependency and Kotlin libs
-    modImplementation 'thedarkcolour:kotlinforforge:3.12.0'
+    modImplementation 'thedarkcolour:kotlinforforge:4.10.0'
 
     // CC Tweaked
     modImplementation("curse.maven:cctweaked-282001:5379173")

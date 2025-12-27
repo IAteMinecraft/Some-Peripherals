@@ -1,9 +1,11 @@
 package net.spaceeye.someperipherals
 
 import dev.architectury.registry.registries.DeferredRegister
+
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
+
 import net.spaceeye.someperipherals.blocks.SomePeripheralsCommonBlocks
 
 

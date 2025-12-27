@@ -23,6 +23,12 @@ subprojects {
         silentMojangMappingsLicense()
     }
 
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+
     repositories {
         maven {
             name = "ParchmentMC"
@@ -69,6 +75,10 @@ allprojects {
         maven {
             name = "Valkyrien Skies Internal"
             url = 'https://maven.valkyrienskies.org'
+
+            content {
+                excludeGroup "thedarkcolour"
+            }
         }
         maven {
             name = 'Kotlin for Forge'

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "peripheral_on=true,facing=north": {
+      "model": "some_peripherals:block/projector/projector_on"
+    },
+    "peripheral_on=true,facing=south": {
+      "model": "some_peripherals:block/projector/projector_on",
+      "y": 180
+    },
+    "peripheral_on=true,facing=west": {
+      "model": "some_peripherals:block/projector/projector_on",
+      "y": 270
+    },
+    "peripheral_on=true,facing=east": {
+      "model": "some_peripherals:block/projector/projector_on",
+      "y": 90
+    },
+    "peripheral_on=true,facing=up": {
+      "model": "some_peripherals:block/projector/projector_on",
+      "x": 270
+    },
+    "peripheral_on=true,facing=down": {
+      "model": "some_peripherals:block/projector/projector_on",
+      "x": 90
+    },
+    "peripheral_on=false,facing=north": {
+      "model": "some_peripherals:block/projector/projector_off"
+    },
+    "peripheral_on=false,facing=south": {
+      "model": "some_peripherals:block/projector/projector_off",
+      "y": 180
+    },
+    "peripheral_on=false,facing=west": {
+      "model": "some_peripherals:block/projector/projector_off",
+      "y": 270
+    },
+    "peripheral_on=false,facing=east": {
+      "model": "some_peripherals:block/projector/projector_off",
+      "y": 90
+    },
+    "peripheral_on=false,facing=up": {
+      "model": "some_peripherals:block/projector/projector_off",
+      "x": 270
+    },
+    "peripheral_on=false,facing=down": {
+      "model": "some_peripherals:block/projector/projector_off",
+      "x": 90
+    }
+  }
+}

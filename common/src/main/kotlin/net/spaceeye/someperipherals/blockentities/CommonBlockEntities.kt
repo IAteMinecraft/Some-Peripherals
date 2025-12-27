@@ -16,13 +16,13 @@ import net.minecraft.world.level.block.state.BlockState
 import net.spaceeye.someperipherals.SomePeripherals
 import net.spaceeye.someperipherals.blocks.SomePeripheralsCommonBlocks
 
-
 object CommonBlockEntities {
     private val BLOCKENTITIES = DeferredRegister.create(SomePeripherals.MOD_ID, Registries.BLOCK_ENTITY_TYPE)
 
-    var RAYCASTER = SomePeripheralsCommonBlocks.RAYCASTER makePair ::RaycasterBlockEntity byName "raycaster"
+    var RAYCASTER        = SomePeripheralsCommonBlocks.RAYCASTER        makePair ::RaycasterBlockEntity      byName "raycaster"
+    var PROJECTOR        = SomePeripheralsCommonBlocks.PROJECTOR        makePair ::ProjectorBlockEntity      byName "projector"
     var GOOGLE_LINK_PORT = SomePeripheralsCommonBlocks.GOGGLE_LINK_PORT makePair ::GoggleLinkPortBlockEntity byName "goggle_link_port"
-    var DIGITIZER = SomePeripheralsCommonBlocks.DIGITIZER makePair ::DigitizerBlockEntity byName "digitizer"
+    var DIGITIZER        = SomePeripheralsCommonBlocks.DIGITIZER        makePair ::DigitizerBlockEntity      byName "digitizer"
 
     private infix fun <T: BlockEntity, TT: Block> RegistrySupplier<TT>.makePair(blockEntity: (BlockPos, BlockState) -> T) = Pair(this, { bp: BlockPos, bs: BlockState -> blockEntity(bp, bs)})
     private infix fun <T: BlockEntity, TT: Block> Pair<RegistrySupplier<TT>, (BlockPos, BlockState) -> T>.byName(name: String): RegistrySupplier<BlockEntityType<T>> =

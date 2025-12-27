@@ -10,7 +10,7 @@ import net.spaceeye.someperipherals.stuff.utils.Vector3d
 import org.valkyrienskies.core.api.ships.Ship
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.transformToNearbyShipsAndWorld
-import org.valkyrienskies.mod.common.util.toMinecraft
+import net.spaceeye.someperipherals.stuff.utils.toMinecraft
 import kotlin.math.max
 
 class Ray(

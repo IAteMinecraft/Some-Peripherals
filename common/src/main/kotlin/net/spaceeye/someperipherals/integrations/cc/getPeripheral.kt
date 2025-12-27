@@ -18,6 +18,7 @@ fun getPeripheralCommon(level: Level, blockPos: BlockPos, direction: Direction):
     return when {
         c(s, SomePeripheralsCommonBlocks.BALLISTIC_ACCELERATOR.get()) -> BallisticAcceleratorPeripheral(level, blockPos)
         c(s, SomePeripheralsCommonBlocks.RAYCASTER.get()) -> RaycasterPeripheral(level, blockPos, be!!)
+        c(s, SomePeripheralsCommonBlocks.PROJECTOR.get()) -> ProjectorPeripheral(level, blockPos, be!!)
         c(s, SomePeripheralsCommonBlocks.GOGGLE_LINK_PORT.get()) -> GoggleLinkPortPeripheral(level, blockPos, be!!)
         c(s, SomePeripheralsCommonBlocks.RADAR.get()) -> RadarPeripheral(level, blockPos)
         c(s, SomePeripheralsCommonBlocks.DIGITIZER.get()) -> DigitizerPeripheral(level, blockPos, be!!)

@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down":  "some_peripherals:block/projector/projector_texture",
+    "up":    "some_peripherals:block/projector/projector_texture",
+    "north": "some_peripherals:block/projector/projector_front_off",
+    "south": "some_peripherals:block/projector/projector_texture",
+    "east":  "some_peripherals:block/projector/projector_texture",
+    "west":  "some_peripherals:block/projector/projector_texture",
+    "particle": "some_peripherals:block/projector/projector_texture"
+  }
+}
