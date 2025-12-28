@@ -5,19 +5,19 @@ import org.joml.Vector3i
 import org.joml.Vector3ic
 
 @Deprecated("Use set", replaceWith = ReplaceWith("set(vector)"))
-public fun Vector3i.copy(vector: Vector3i) {
-    this.x = vector.x;
-    this.y = vector.y;
-    this.z = vector.z;
+fun Vector3i.copy(vector: Vector3i) {
+    this.x = vector.x
+    this.y = vector.y
+    this.z = vector.z
 }
 
-public fun Vector3i.greaterThan(vec: Vector3i): Boolean {
+fun Vector3i.greaterThan(vec: Vector3i): Boolean {
     return  this.x > vec.x ||
             this.y > vec.y ||
             this.z > vec.z
 }
 
-public fun Vector3i.lesserThan(vec: Vector3i): Boolean {
+fun Vector3i.lesserThan(vec: Vector3i): Boolean {
     return  this.x < vec.x ||
             this.y < vec.y ||
             this.z < vec.z
@@ -61,7 +61,7 @@ fun findRayIntersection(pos1: Vector3ic, dir1: Direction, pos2: Vector3ic, dir2:
     val c2Axis2 = axis2.choose(pos2.x(), pos2.y(), pos2.z())
     val s = (c1Axis2 - c2Axis2) / offset2
 
-    // Check if both parameters are non-negative (considering floating-point precision).
+    // Check if both parameters are non-negative
     if (t >= 0 && s >= 0) {
         // Calculate the intersection point using the first ray.
         val dx = t * dir1.stepX
