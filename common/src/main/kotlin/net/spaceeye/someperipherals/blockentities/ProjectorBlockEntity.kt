@@ -44,13 +44,13 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
 
     fun setVoxel(pos: Vector3i, voxel: Voxel): Voxel { // Take the position seperately because we don't store it in the Voxel anymore
         if (otherProjector == null)  throw NullPointerException("Projector has not been linked")
-        if (screenSize == Vector3i() || pos.greaterThan(screenSize) || pos.lesserThan(Vector3i())) throw IndexOutOfBoundsException("Tried to set a voxel in an out of bounds place")
-        voxels.remove(pos) // Mutable map handles null entries
+        if (pos.greaterThan(screenSize) || pos.lesserThan(Vector3i())) throw IndexOutOfBoundsException("Tried to set a voxel in an out of bounds place")
+        //voxels.remove(pos) // Mutable map handles null entries
 
         voxels[pos] = voxel
         sendVoxelAddPacket(pos, voxel)
 
-        return voxels[pos]!! // If this is null there is something really broken
+        return voxel
     }
 
     fun removeVoxel(pos: Vector3i): Voxel? {
@@ -63,14 +63,14 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
 
     fun updateVoxel(oldPos: Vector3i, newPos: Vector3i): Boolean {
         if (otherProjector == null)  throw NullPointerException("Projector has not been linked")
-        if (screenSize == Vector3i() || newPos.greaterThan(screenSize) || newPos.lesserThan(Vector3i())) throw IndexOutOfBoundsException("Tried to set a voxel in an out of bounds place")
+        if (newPos.greaterThan(screenSize) || newPos.lesserThan(Vector3i())) throw IndexOutOfBoundsException("Tried to set a voxel in an out of bounds place")
         var hasReplaced = false
         if (voxels[newPos] != null) hasReplaced = true
 
         voxels[newPos] = voxels.remove(oldPos) ?: throw KotlinNullPointerException("Impossible null in updateVoxel") // Should never be null, but just to be safe; // Don't copy, replace
         sendVoxelMovePacket(oldPos, newPos)
 
-        return hasReplaced // has replaced a voxel
+        return hasReplaced
     }
 
     @Deprecated("Use key")
