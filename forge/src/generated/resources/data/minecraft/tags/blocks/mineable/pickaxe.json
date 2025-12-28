@@ -1,0 +1,11 @@
+{
+  "values": [
+    "some_peripherals:ballistic_accelerator",
+    "some_peripherals:raycaster",
+    "some_peripherals:projector",
+    "some_peripherals:goggle_link_port",
+    "some_peripherals:radar",
+    "some_peripherals:digitizer",
+    "some_peripherals:world_scanner"
+  ]
+}

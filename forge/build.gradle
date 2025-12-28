@@ -27,12 +27,29 @@ architectury {
     forge()
 }
 
+File generatedResources = file("src/generated/resources")
+
+sourceSets {
+    main {
+        resources.srcDir generatedResources
+    }
+}
+
 loom {
     forge {
         mixinConfig "some_peripherals-common.mixins.json"
     }
     mixin {
         defaultRefmapName = "some_peripherals-refmap.json"
+    }
+
+    runs {
+        data {
+            data()
+            programArgs "--all", "--mod", "some_peripherals"
+            programArgs "--output", generatedResources.absolutePath
+            programArgs "--existing", file('src/main/resources').absolutePath
+        }
     }
 }
 

@@ -27,6 +27,12 @@
         "adapter": "kotlin",
         "value": "net.spaceeye.someperipherals.fabric.SomePeripheralsFabricClient"
       }
+    ],
+    "fabric-datagen": [
+      {
+        "adapter": "kotlin",
+        "value": "net.spaceeye.someperipherals.fabric.SomePeripheralsDataGen"
+      }
     ]
   },
   "mixins": [

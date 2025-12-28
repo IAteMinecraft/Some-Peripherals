@@ -37,13 +37,12 @@ class ProjectorBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : B
 
         val vc = bufferSource.getBuffer(SomePeripheralsRenderTypes.PROJECTOR_PIXEL);
 
-        val screenPos = projector.screenPos;//projector.blockPos.offset(projector.blockState.getValue(BlockStateProperties.FACING).normal).toJOML()
+        val screenPos = projector.screenPos;
 
         val resolution = SCREEN_RESOLUTION; // pixels per block, at 16 it would be 16x16x16 pixels for one block
         val size = 1.0f / resolution;
 
         val matrix = transform.last().pose();
-        //    matrix.translation(Vector3f(screenPos));
 
         // Iterate over all the voxels that need to be rendered
         for (voxelEntry in projector.voxels) {
@@ -90,6 +89,14 @@ class ProjectorBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : B
                     screenPos.z + floor(z1).toInt()
                 )
             );
+
+            // Translate voxels to where the actual screenspace is
+            x1 += (screenPos.x() - projector.blockPos.x);
+            x2 += (screenPos.x() - projector.blockPos.x);
+            y1 += (screenPos.y() - projector.blockPos.y);
+            y2 += (screenPos.y() - projector.blockPos.y);
+            z1 += (screenPos.z() - projector.blockPos.z);
+            z2 += (screenPos.z() - projector.blockPos.z);
 
             // Front face (+Z)
             if (projector.voxels[Vector3i(position.x, position.y, position.z + 1)] == null) {

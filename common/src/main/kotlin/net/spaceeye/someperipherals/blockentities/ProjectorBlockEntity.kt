@@ -43,29 +43,35 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
     var doIRender = false;
 
     fun setVoxel(pos: Vector3i, voxel: Voxel): Voxel { // Take the position seperately because we don't store it in the Voxel anymore
+        val otherProjector = otherProjector ?: throw NullPointerException("Projector has not been linked");
         if (screenSize == Vector3i() || pos.greaterThan(screenSize) || pos.lesserThan(Vector3i())) throw IndexOutOfBoundsException("Tried to set a voxel in an out of bounds place")
         voxels.remove(pos); // Mutable map handles null entries
 
         voxels[pos] = voxel;
         sendVoxelAddPacket(pos, voxel);
+        otherProjector.sendVoxelAddPacket(pos, voxel);
 
         return voxels[pos]!!; // If this is null there is something really broken
     }
 
     fun removeVoxel(pos: Vector3i): Voxel? {
+        val otherProjector = otherProjector ?: throw NullPointerException("Projector has not been linked");
         val voxel = voxels.remove(pos);
         sendVoxelRemovePacket(pos); // We use position, as only one voxel can occupy one space, and we can't reliably send the whole voxel as an object to be removed from the array
+        otherProjector.sendVoxelRemovePacket(pos);
 
         return voxel;
     }
 
     fun updateVoxel(oldPos: Vector3i, newPos: Vector3i): Boolean {
+        val otherProjector = otherProjector ?: throw NullPointerException("Projector has not been linked");
         if (screenSize == Vector3i() || newPos.greaterThan(screenSize) || newPos.lesserThan(Vector3i())) throw IndexOutOfBoundsException("Tried to set a voxel in an out of bounds place")
         var hasReplaced = false;
         if (voxels[newPos] != null) hasReplaced = true;
 
         voxels[newPos] = voxels.remove(oldPos) ?: throw KotlinNullPointerException("Impossible null in updateVoxel"); // Should never be null, but just to be safe; // Don't copy, replace
         sendVoxelMovePacket(oldPos, newPos);
+        otherProjector.sendVoxelMovePacket(oldPos, newPos);
 
         return hasReplaced; // has replaced a voxel
     }
@@ -85,8 +91,10 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
     }
 
     fun clearVoxels() {
+        val otherProjector = otherProjector ?: throw NullPointerException("Projector has not been linked");
         voxels.clear();
         sendClearVoxelsPacket()
+        otherProjector.sendClearVoxelsPacket()
     }
 
     // Returns true if successfully made a link to the other projector, false otherwise
