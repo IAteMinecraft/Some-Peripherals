@@ -32,7 +32,7 @@ object ProjectorForgeEvents {
                 ) { // Don't send packet if the projector has not been turned on by an attached computer or we are not the rendering instance
                 val buf = FriendlyByteBuf(Unpooled.buffer()).apply {
                     writeBlockPos(pos)
-                    writeVoxelMap(be.voxels);
+                    writeVoxelMap(be.voxels)
                 }
 
                 //TODO send full update in split chunks

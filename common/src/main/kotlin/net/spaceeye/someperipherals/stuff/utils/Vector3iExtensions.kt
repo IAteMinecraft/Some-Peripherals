@@ -1,7 +1,6 @@
 package net.spaceeye.someperipherals.stuff.utils
 
 import net.minecraft.core.Direction
-import org.joml.Vector3d
 
 import org.joml.Vector3i
 import org.joml.Vector3ic

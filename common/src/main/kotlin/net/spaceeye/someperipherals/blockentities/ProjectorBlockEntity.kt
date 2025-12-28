@@ -24,15 +24,14 @@ import net.spaceeye.someperipherals.blocks.PERIPHERAL_ON
 import net.spaceeye.someperipherals.blocks.SomePeripheralsCommonBlocks
 import net.spaceeye.someperipherals.stuff.utils.Voxel
 import net.spaceeye.someperipherals.stuff.utils.findIntersectionCuboid
-import net.spaceeye.someperipherals.stuff.utils.findRayIntersection
 import net.spaceeye.someperipherals.stuff.utils.greaterThan
 import net.spaceeye.someperipherals.stuff.utils.lesserThan
 import net.spaceeye.someperipherals.stuff.utils.writeVector3i
 import net.spaceeye.someperipherals.stuff.utils.writeVoxel
 import net.spaceeye.someperipherals.stuff.utils.writeVoxelMap
+import net.spaceeye.someperipherals.stuff.utils.toJOML
 
 import org.joml.Vector3i
-import net.spaceeye.someperipherals.stuff.utils.toJOML
 
 class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockEntity(CommonBlockEntities.PROJECTOR.get(), pos, state) {
     @GuardedBy("computers")
