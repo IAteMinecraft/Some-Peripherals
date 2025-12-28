@@ -1,8 +1,14 @@
 package net.spaceeye.someperipherals.stuff.utils
 
 import net.minecraft.core.Direction
+import org.joml.Vector3d
+
 import org.joml.Vector3i
 import org.joml.Vector3ic
+import org.joml.primitives.AABBi
+import kotlin.math.floor
+
+import kotlin.math.min
 
 @Deprecated("Use set", replaceWith = ReplaceWith("set(vector)"))
 fun Vector3i.copy(vector: Vector3i) {
@@ -71,4 +77,36 @@ fun findRayIntersection(pos1: Vector3ic, dir1: Direction, pos2: Vector3ic, dir2:
     }
 
     return null
+}
+
+/**
+ * Calculates the axis-aligned cuboid (Box) centered at the intersection point of two axis-aligned rays,
+ * with size determined by the minimum distance from pos1 or pos2 to the intersection point.
+ * The size follows the pattern: distance 1 -> 1x1x1, 2 -> 3x3x3, 4 -> 5x5x5, etc.,
+ * using the formula 2 * floor(min_dist / 2) + 1.
+ *
+ * @param pos1 Starting position of the first ray.
+ * @param dir1 Direction of the first ray.
+ * @param pos2 Starting position of the second ray.
+ * @param dir2 Direction of the second ray.
+ * @return The cuboid as Box, or null if no intersection.
+ */
+fun findIntersectionCuboid(pos1: Vector3ic, dir1: Direction, pos2: Vector3ic, dir2: Direction): AABBi? {
+    val intersection = findRayIntersection(pos1, dir1, pos2, dir2) ?: return null
+
+    val dist1 = pos1.distance(intersection)
+    val dist2 = pos2.distance(intersection)
+    val minDist = min(dist1, dist2)
+
+    val size = 2 * floor((minDist - 1) / 2) + 1
+    val half = size / 2.0
+
+    return AABBi(
+        floor(intersection.x + 0.5 - half).toInt(),
+        floor(intersection.y + 0.5 - half).toInt(),
+        floor(intersection.z + 0.5 - half).toInt(),
+        floor(intersection.x + 0.5 + half).toInt(),
+        floor(intersection.y + 0.5 + half).toInt(),
+        floor(intersection.z + 0.5 + half).toInt()
+    ).correctBounds()
 }

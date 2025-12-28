@@ -23,6 +23,7 @@ import net.spaceeye.someperipherals.LOG
 import net.spaceeye.someperipherals.blocks.PERIPHERAL_ON
 import net.spaceeye.someperipherals.blocks.SomePeripheralsCommonBlocks
 import net.spaceeye.someperipherals.stuff.utils.Voxel
+import net.spaceeye.someperipherals.stuff.utils.findIntersectionCuboid
 import net.spaceeye.someperipherals.stuff.utils.findRayIntersection
 import net.spaceeye.someperipherals.stuff.utils.greaterThan
 import net.spaceeye.someperipherals.stuff.utils.lesserThan
@@ -43,46 +44,45 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
     var doIRender = false
 
     fun setVoxel(pos: Vector3i, voxel: Voxel): Voxel { // Take the position seperately because we don't store it in the Voxel anymore
-        val otherProjector = otherProjector ?: throw NullPointerException("Projector has not been linked")
+        if (otherProjector == null)  throw NullPointerException("Projector has not been linked")
         if (screenSize == Vector3i() || pos.greaterThan(screenSize) || pos.lesserThan(Vector3i())) throw IndexOutOfBoundsException("Tried to set a voxel in an out of bounds place")
         voxels.remove(pos) // Mutable map handles null entries
 
         voxels[pos] = voxel
         sendVoxelAddPacket(pos, voxel)
-        otherProjector.sendVoxelAddPacket(pos, voxel)
 
         return voxels[pos]!! // If this is null there is something really broken
     }
 
     fun removeVoxel(pos: Vector3i): Voxel? {
-        val otherProjector = otherProjector ?: throw NullPointerException("Projector has not been linked")
+        if (otherProjector == null)  throw NullPointerException("Projector has not been linked")
         val voxel = voxels.remove(pos)
         sendVoxelRemovePacket(pos) // We use position, as only one voxel can occupy one space, and we can't reliably send the whole voxel as an object to be removed from the array
-        otherProjector.sendVoxelRemovePacket(pos)
 
         return voxel
     }
 
     fun updateVoxel(oldPos: Vector3i, newPos: Vector3i): Boolean {
-        val otherProjector = otherProjector ?: throw NullPointerException("Projector has not been linked")
+        if (otherProjector == null)  throw NullPointerException("Projector has not been linked")
         if (screenSize == Vector3i() || newPos.greaterThan(screenSize) || newPos.lesserThan(Vector3i())) throw IndexOutOfBoundsException("Tried to set a voxel in an out of bounds place")
         var hasReplaced = false
         if (voxels[newPos] != null) hasReplaced = true
 
         voxels[newPos] = voxels.remove(oldPos) ?: throw KotlinNullPointerException("Impossible null in updateVoxel") // Should never be null, but just to be safe; // Don't copy, replace
         sendVoxelMovePacket(oldPos, newPos)
-        otherProjector.sendVoxelMovePacket(oldPos, newPos)
 
         return hasReplaced // has replaced a voxel
     }
 
     @Deprecated("Use key")
     fun getVoxelIndex(pos: Vector3i): Vector3i? {
+        if (otherProjector == null)  throw NullPointerException("Projector has not been linked")
         return if (voxels.contains(pos)) pos else null // Return the position or No voxel found with that index
     }
 
     @Deprecated("Slow Code")
     fun getVoxelEntry(pos: Vector3i): MutableMap.MutableEntry<Vector3i, Voxel>? {
+        if (otherProjector == null)  throw NullPointerException("Projector has not been linked")
         for (voxelEntry in voxels) {
             if (voxelEntry.key == pos) return voxelEntry
         }
@@ -91,10 +91,9 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
     }
 
     fun clearVoxels() {
-        val otherProjector = otherProjector ?: throw NullPointerException("Projector has not been linked")
+        if (otherProjector == null)  throw NullPointerException("Projector has not been linked")
         voxels.clear()
         sendClearVoxelsPacket()
-        otherProjector.sendClearVoxelsPacket()
     }
 
     // Returns true if successfully made a link to the other projector, false otherwise
@@ -107,7 +106,7 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
         val dir2 = other.blockState.getValue(BlockStateProperties.FACING)
 
         // Get the intersection between the blocks, null if there is none
-        val intersectionPos = findRayIntersection(pos1, dir1, pos2, dir2) ?: return false // this will be the center position of the screen
+        val screenAABB = findIntersectionCuboid(pos1, dir1, pos2, dir2) ?: return false
 
         // Set the references between the projectors
         // they will now share properties
@@ -119,19 +118,17 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
         otherProjector!!.doIRender = false
 
         // Set the bottom left corner of the screen
-        screenPos.x = intersectionPos.x()
-        screenPos.y = intersectionPos.y()
-        screenPos.z = intersectionPos.z()
+        screenPos.x = screenAABB.minX
+        screenPos.y = screenAABB.minY
+        screenPos.z = screenAABB.minZ
 
         // Set the size of the screen
-        // TODO: calculate the size of the screen
-        screenSize.x = (1) * SCREEN_RESOLUTION
-        screenSize.y = (1) * SCREEN_RESOLUTION
-        screenSize.z = (1) * SCREEN_RESOLUTION
+        screenSize.x = (screenAABB.lengthX()) * SCREEN_RESOLUTION
+        screenSize.y = (screenAABB.lengthY()) * SCREEN_RESOLUTION
+        screenSize.z = (screenAABB.lengthZ()) * SCREEN_RESOLUTION
         doIRender = true
 
         // Update the clientSide BlockEntities
-        otherProjector!!.sendProjectorAttach()
         sendProjectorAttach()
 
         return true
@@ -140,12 +137,15 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
     fun unlinkProjector() {
         val otherProjector = otherProjector ?: return
 
+        sendProjectorDetach() // Call before doing anything because it will send the packet for the other projector too
+
         otherProjector.otherProjector = null
         otherProjector.voxels = mutableMapOf()
         otherProjector.screenSize = Vector3i()
         otherProjector.screenPos = Vector3i()
 
         this.otherProjector = null
+        voxels = mutableMapOf()
         screenSize = Vector3i()
         screenPos = Vector3i()
         doIRender = false
@@ -247,6 +247,9 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
 
     // Method to send the custom update packet to tracking players
     fun sendFullUpdatePacket() {
+        val otherProjector = otherProjector ?: return
+        if (!doIRender && otherProjector.doIRender) {otherProjector.sendFullUpdatePacket(); return} // Don't double send packets
+
         if (level?.isClientSide != false) return
         val serverLevel = level as ServerLevel
         val chunkPos = ChunkPos(blockPos)
@@ -277,6 +280,9 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
 
     // Just tell the client that all voxels were removed, instead of sending all the extra trash
     fun sendClearVoxelsPacket() {
+        val otherProjector = otherProjector ?: return
+        if (!doIRender && otherProjector.doIRender) {otherProjector.sendClearVoxelsPacket(); return} // Don't double send packets
+
         if (level?.isClientSide != false) return
         val serverLevel = level as ServerLevel
         val chunkPos = ChunkPos(blockPos)
@@ -293,6 +299,9 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
 
     // Only send changed voxel to clients
     fun sendVoxelAddPacket(pos: Vector3i, voxel: Voxel) {
+        val otherProjector = otherProjector ?: return
+        if (!doIRender && otherProjector.doIRender) {otherProjector.sendVoxelAddPacket(pos, voxel); return} // Don't double send packets
+
         if (level?.isClientSide != false) return
         val serverLevel = level as ServerLevel
         val chunkPos = ChunkPos(blockPos)
@@ -309,6 +318,9 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
 
     // tell clients a voxel has been removed
     fun sendVoxelRemovePacket(pos: Vector3i) {
+        val otherProjector = otherProjector ?: return
+        if (!doIRender && otherProjector.doIRender) {otherProjector.sendVoxelRemovePacket(pos); return} // Don't double send packets
+
         if (level?.isClientSide != false) return
         val serverLevel = level as ServerLevel
         val chunkPos = ChunkPos(blockPos)
@@ -325,6 +337,9 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
 
     // tell clients a voxel has been removed
     fun sendVoxelMovePacket(oldPos: Vector3i, newPos: Vector3i) {
+        val otherProjector = otherProjector ?: return
+        if (!doIRender && otherProjector.doIRender) {otherProjector.sendVoxelMovePacket(oldPos, newPos); return} // Don't double send packets
+
         if (level?.isClientSide != false) return
         val serverLevel = level as ServerLevel
         val chunkPos = ChunkPos(blockPos)
@@ -359,13 +374,29 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
         NetworkManager.sendToPlayers(players, PROJECTOR_UPDATE_ID, buf)
     }
 
+    fun sendProjectorDetach() {
+        if (level?.isClientSide != false) return
+
+        val serverLevel = level as ServerLevel
+        val chunkPos = ChunkPos(blockPos)
+        val players = serverLevel.chunkSource.chunkMap.getPlayers(chunkPos, false)
+        if (players.isEmpty()) return
+
+        val buf = FriendlyByteBuf(Unpooled.buffer()).apply {
+            writeEnum(PacketType.DETACH_PROJECTOR)
+            writeBlockPos(blockPos)
+        }
+        NetworkManager.sendToPlayers(players, PROJECTOR_UPDATE_ID, buf)
+    }
+
     enum class PacketType {
         FULL_UPDATE,
         CLEAR_VOXELS,
         VOXEL_UPDATE_ADD,
         VOXEL_UPDATE_REMOVE,
         VOXEL_UPDATE_MOVE,
-        ATTACH_PROJECTOR
+        ATTACH_PROJECTOR,
+        DETACH_PROJECTOR
     }
 
     // Define the packet ID

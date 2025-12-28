@@ -71,11 +71,11 @@ class ProjectorPeripheral(private val level: Level, private val pos: BlockPos, p
     @LuaFunction
     fun isLinked() = (be as? ProjectorBlockEntity)!!.otherProjector != null;
 
-    @LuaFunction
-    fun doIRender() = (be as? ProjectorBlockEntity)!!.doIRender;
+    //@LuaFunction
+    //fun doIRender() = (be as? ProjectorBlockEntity)!!.doIRender;
 
-    @LuaFunction
-    fun getScreenPos(): Array<Any> {(be as? ProjectorBlockEntity)!!.screenPos.let { (i, i1, i2) -> return arrayOf(i, i1, i2) }}
+    //@LuaFunction
+    //fun getScreenPos(): Array<Any> {(be as? ProjectorBlockEntity)!!.screenPos.let { (i, i1, i2) -> return arrayOf(i, i1, i2) }}
 
     @LuaFunction
     fun getScreenSize(): Array<Any> {(be as? ProjectorBlockEntity)!!.screenSize.let { (i, i1, i2) -> return arrayOf(i, i1, i2) }}

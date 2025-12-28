@@ -24,7 +24,12 @@ object ProjectorForgeEvents {
         val player = event.player
 
         chunk.blockEntities.forEach { (pos, be) ->
-            if (be is ProjectorBlockEntity && be.isOn()) { // Don't send packet if the projector has not been turned on by an attached computer
+            if (
+                be is ProjectorBlockEntity &&
+                be.isOn() &&
+                be.otherProjector != null &&
+                be.doIRender
+                ) { // Don't send packet if the projector has not been turned on by an attached computer or we are not the rendering instance
                 val buf = FriendlyByteBuf(Unpooled.buffer()).apply {
                     writeBlockPos(pos)
                     writeVoxelMap(be.voxels);
