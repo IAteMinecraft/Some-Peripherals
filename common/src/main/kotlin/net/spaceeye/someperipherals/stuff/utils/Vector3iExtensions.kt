@@ -62,10 +62,10 @@ fun findRayIntersection(pos1: Vector3ic, dir1: Direction, pos2: Vector3ic, dir2:
     val s = (c1Axis2 - c2Axis2) / offset2
 
     // Check if both parameters are non-negative (considering floating-point precision).
-    if (t >= 0 && s >= 0) { // Allow small negative due to precision
+    if (t >= 0 && s >= 0) {
         // Calculate the intersection point using the first ray.
         val dx = t * dir1.stepX
-        val dy = t * dir1.stepX
+        val dy = t * dir1.stepY
         val dz = t * dir1.stepZ
         return Vector3i(pos1).add(dx, dy, dz)
     }

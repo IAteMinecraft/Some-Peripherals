@@ -119,9 +119,9 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
         otherProjector!!.doIRender = false;
 
         // Set the bottom left corner of the screen
-        //screenPos.x = intersectionPos.x();
-        //screenPos.y = intersectionPos.y();
-        //screenPos.z = intersectionPos.z();
+        screenPos.x = intersectionPos.x();
+        screenPos.y = intersectionPos.y();
+        screenPos.z = intersectionPos.z();
 
         // Set the size of the screen
         // TODO: calculate the size of the screen
