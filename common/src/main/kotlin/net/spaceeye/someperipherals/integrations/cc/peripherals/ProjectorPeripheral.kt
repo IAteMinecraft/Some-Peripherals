@@ -100,7 +100,7 @@ class ProjectorPeripheral(private val level: Level, private val pos: BlockPos, p
 
     override fun getTarget() = (be as? ProjectorBlockEntity)
     override fun getType() = "sp_projector"
-    override fun equals(p0: IPeripheral?) = level.getBlockState(pos).`is`(SomePeripheralsCommonBlocks.PROJECTOR.get())
+    override fun equals(p0: IPeripheral?) = level.getBlockState(pos).`is`(SomePeripheralsCommonBlocks.PROJECTOR.get()) // TODO: Fix this
 
     override fun attach(computer: IComputerAccess) {
         (be as? ProjectorBlockEntity)?.attach(computer)
