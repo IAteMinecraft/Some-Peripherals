@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "some_peripherals:item/status_goggles"
+  }
+}

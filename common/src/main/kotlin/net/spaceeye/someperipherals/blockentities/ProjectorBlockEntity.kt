@@ -401,6 +401,6 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
     // Define the packet ID
     companion object {
         val PROJECTOR_UPDATE_ID = ResourceLocation("someperipherals", "projector_update")
-        val SCREEN_RESOLUTION = 16
+        const val SCREEN_RESOLUTION = 16
     }
 }
