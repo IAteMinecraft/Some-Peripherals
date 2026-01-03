@@ -2,20 +2,23 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "C": {
-      "item": "minecraft:compass"
+    "G": {
+      "item": "minecraft:glass"
     },
     "I": {
       "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "minecraft:redstone"
     }
   },
   "pattern": [
     "III",
-    "ICI",
+    "IRG",
     "III"
   ],
   "result": {
-    "item": "some_peripherals:radar"
+    "item": "some_peripherals:raycaster"
   },
   "show_notification": true
 }

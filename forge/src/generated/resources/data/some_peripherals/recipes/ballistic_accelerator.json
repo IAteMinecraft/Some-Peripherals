@@ -2,20 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "C": {
-      "item": "minecraft:compass"
-    },
     "I": {
       "item": "minecraft:iron_ingot"
+    },
+    "W": {
+      "item": "minecraft:water_bucket"
     }
   },
   "pattern": [
     "III",
-    "ICI",
+    "IWI",
     "III"
   ],
   "result": {
-    "item": "some_peripherals:radar"
+    "item": "some_peripherals:ballistic_accelerator"
   },
   "show_notification": true
 }

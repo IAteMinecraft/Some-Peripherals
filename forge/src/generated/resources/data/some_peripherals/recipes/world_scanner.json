@@ -7,15 +7,18 @@
     },
     "I": {
       "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "minecraft:lightning_rod"
     }
   },
   "pattern": [
-    "III",
-    "ICI",
-    "III"
+    "IRI",
+    "RCR",
+    "IRI"
   ],
   "result": {
-    "item": "some_peripherals:radar"
+    "item": "some_peripherals:world_scanner"
   },
   "show_notification": true
 }

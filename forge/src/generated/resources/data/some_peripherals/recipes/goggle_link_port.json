@@ -7,15 +7,18 @@
     },
     "I": {
       "item": "minecraft:iron_ingot"
+    },
+    "O": {
+      "item": "minecraft:copper_ingot"
     }
   },
   "pattern": [
-    "III",
-    "ICI",
-    "III"
+    "IOI",
+    "OCO",
+    "IOI"
   ],
   "result": {
-    "item": "some_peripherals:radar"
+    "item": "some_peripherals:goggle_link_port"
   },
   "show_notification": true
 }

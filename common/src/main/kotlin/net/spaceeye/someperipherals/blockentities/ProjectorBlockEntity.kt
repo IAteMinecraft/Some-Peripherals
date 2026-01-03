@@ -245,6 +245,7 @@ class ProjectorBlockEntity(pos: BlockPos, private val state: BlockState): BlockE
     }
 
     // Method to send the custom update packet to tracking players
+    @Deprecated("This will exit if there are too many voxel, so any new watching clients will just get changes")
     fun sendFullUpdatePacket() {
         val otherProjector = otherProjector ?: return
         if (!doIRender && otherProjector.doIRender) {otherProjector.sendFullUpdatePacket(); return} // Don't double send packets
